@@ -2,6 +2,8 @@
 #include <fstream>	//for reading files
 #include <vector>	//vector is useful and easy to manage
 #include <cmath>	//for pow() function
+#include <fstream> 	//for file I/O
+#include <cstring>
 
 using namespace std;
 
@@ -11,9 +13,25 @@ void addOneMixedRadix(vector<int>&, vector<int>);
 void print(vector<int>);
 bool overflowCheck(vector<int>);
 
-int main(){
+int main(int arg, char *argv[]){
 	vector<int> A;
 	vector<int> B;
+	ifstream fin; //For file I/O
+	
+	if(arg == 2){
+		cout<<"Attempting to open ";
+		for(int i = 0; i < strlen(argv[1]); i++)
+			cout<<argv[1][i];
+		cout<<". . .\n";
+		fin.open(argv[1]);
+		if(!fin.good()){
+			cout<<"File I/O Error. Terminating.\n";
+			return 0;
+		}
+	} //Checks if # of args is 2, so that we can open the file that is the 2nd arg
+	else 
+		DEBUG_ON = true;
+	
 	if(DEBUG_ON){ //Default values of A and B for error testing ;)
 		for(int i = 0; i < 5; i++){
 				A.push_back(0);
@@ -23,14 +41,14 @@ int main(){
 					B.push_back(3);
 		} 
 	}
-	print(A);
-	print(B);
-	cout<<"---------------Beginning Enumeration of Permutations---------------"<<endl;
+	if(DEBUG_ON) print(A);
+	if(DEBUG_ON) print(B);
+	if(DEBUG_ON) cout<<"---------------Beginning Enumeration of Permutations---------------"<<endl;
 	int numOfPermutations = 0;
 	do{
 		addOneMixedRadix(A, B);
 		numOfPermutations++;
-		if(numOfPermutations %  25 == 0) print(A);
+		if(DEBUG_ON) if(numOfPermutations %  25 == 0) print(A);
 	}while(!overflowCheck(A)); //NOTE: We can also enumerate them out using pow function summation, this is just simpler for now.
 	return 0;
 }
