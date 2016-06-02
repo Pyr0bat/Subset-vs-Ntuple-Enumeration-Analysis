@@ -6,3 +6,6 @@ ntuple:
 
 datagenerator:
 	g++ -std=c++11 -o datagenerator datagenerator.cpp 
+
+clean:
+	$(RM) datagenerator, $(RM) ntuple

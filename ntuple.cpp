@@ -3,7 +3,8 @@
 #include <vector>	//vector is useful and easy to manage
 #include <cmath>	//for pow() function
 #include <fstream> 	//for file I/O
-#include <cstring>
+#include <string>	//for string 
+#include <cstring>	//for strlen
 
 using namespace std;
 
@@ -12,11 +13,22 @@ bool DEBUG_ON = true;
 void addOneMixedRadix(vector<int>&, vector<int>);
 void print(vector<int>);
 bool overflowCheck(vector<int>);
+int sum(vector<int>, vector<int>);
 
 int main(int arg, char *argv[]){
 	vector<int> A;
 	vector<int> B;
+	vector<int> weight;
+	vector<int> value;
+	string line;
+	char buf[1000];
+	const char* const comma = ",";
+	char* token;
 	ifstream fin; //For file I/O
+	int maxWeight = 0;
+	int bestValueSoFar = 0;
+	int bestWeightSoFar = 0;
+	vector<int> bestPerm;
 	
 	if(arg == 2){
 		cout<<"Attempting to open ";
@@ -28,28 +40,52 @@ int main(int arg, char *argv[]){
 			cout<<"File I/O Error. Terminating.\n";
 			return 0;
 		}
+		getline(fin, line); //we dgaf
+		getline(fin, line); //this will have max Weight
+		maxWeight = stoi(line);
+		while(fin.good()){
+			getline(fin, line); 
+			strcpy(buf, line.c_str());
+			const string itemCopies(token = strtok(buf, comma));
+			const string itemValue(token = strtok(0, comma)); 
+			const string itemWeight(token = strtok(0, comma));
+			value.push_back(stoi(itemValue));
+			weight.push_back(stoi(itemWeight));
+			B.push_back(stoi(itemCopies) + 1);
+			A.push_back(0);
+		}
 	} //Checks if # of args is 2, so that we can open the file that is the 2nd arg
 	else 
 		DEBUG_ON = true;
-	
-	if(DEBUG_ON){ //Default values of A and B for error testing ;)
-		for(int i = 0; i < 5; i++){
-				A.push_back(0);
-				if(i < 4)
-					B.push_back((6-i));
-				else
-					B.push_back(3);
-		} 
-	}
+
 	if(DEBUG_ON) print(A);
 	if(DEBUG_ON) print(B);
+	if(DEBUG_ON) print(value);
+	if(DEBUG_ON) print(weight);
 	if(DEBUG_ON) cout<<"---------------Beginning Enumeration of Permutations---------------"<<endl;
 	int numOfPermutations = 0;
 	do{
 		addOneMixedRadix(A, B);
 		numOfPermutations++;
-		if(DEBUG_ON) if(numOfPermutations %  25 == 0) print(A);
+		int permWeight = sum(A, weight);
+		int permValue;
+		if(permWeight > maxWeight)
+			continue;
+		else{
+			permValue = sum(A, value);
+			if(permValue > bestValueSoFar){
+				bestValueSoFar = permValue;
+				bestWeightSoFar = permWeight;
+				bestPerm = A;
+			}
+		}
+			
+		if(DEBUG_ON) if(numOfPermutations %  4 == 0) print(A);
 	}while(!overflowCheck(A)); //NOTE: We can also enumerate them out using pow function summation, this is just simpler for now.
+	cout<<"Best Permutation's Items = ";
+	print(bestPerm);
+	cout<<"Corresponding Weight = "<<bestWeightSoFar<<endl;
+	cout<<"Corresponding Value = "<<bestValueSoFar<<endl;
 	return 0;
 }
 
@@ -60,8 +96,10 @@ TODO (Potentially): Pass as parameters the specifics of each enumeration,
 		sure that the permutation uses exactly 500 gold bars	
 */
 void addOneMixedRadix(vector<int>& a, vector<int> b){ 
-	if(a.size() != b.size())
+	if(a.size() != b.size()){
 		cout<<"ERROR: Arrays of different size!\n";
+		return;
+	}
 	for(int i = 0; i < a.size(); i++){
 		if(a[i] + 1 == b[i]){
 			a[i] = 0; //carry
@@ -89,5 +127,12 @@ bool overflowCheck(vector<int> checkMe){
 			continue;
 	}
 	return true; 
-		
+}
+
+int sum(vector<int> permVec, vector<int> numVec){
+	int sum = 0;
+	for(int i = 0; i < permVec.size(); i++)
+		sum += permVec[i]*numVec[i];
+
+	return sum;
 }
