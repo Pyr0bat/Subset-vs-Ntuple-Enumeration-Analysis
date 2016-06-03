@@ -32,10 +32,10 @@ int main(int arg, char *argv[]){
 	vector<int> bestPerm;
 	
 	if(arg == 2){
-		cout<<"Attempting to open ";
-		for(int i = 0; i < strlen(argv[1]); i++)
+		if(DEBUG_ON) cout<<"Attempting to open ";
+		if(DEBUG_ON) for(int i = 0; i < strlen(argv[1]); i++)
 			cout<<argv[1][i];
-		cout<<". . .\n";
+		if(DEBUG_ON) cout<<". . .\n";
 		fin.open(argv[1]);
 		if(!fin.good()){
 			if(DEBUG_ON) cout<<"File I/O Error. Terminating.\n";
