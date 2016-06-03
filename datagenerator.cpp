@@ -3,7 +3,7 @@
 #include <string.h>
 #include <string>
 #include <unistd.h>
-#include <sys/types.h> 
+#include <sys/types.h>
 #include <fcntl.h>
 #include <string>
 #include <string.h>
@@ -12,8 +12,9 @@
 #include <ctype.h>
 #include <time.h>
 using namespace std;
-//first line is the weight of the bag
-//output ot file is: item#,item value,item weight
+//first line is number of items
+//second line is max weight of our bag
+//output ot file is: #copies,item value,item weight
 int main(int argc, char *argv[]){
 	if(argc < 3){
 		printf("datagenerator [number of items] [number of copies]");
@@ -23,30 +24,30 @@ int main(int argc, char *argv[]){
 	if(filefd < 0){
 		perror("Couldn't create file.");
 	}
-	int values[atoi(argv[1])*atoi(argv[2])];
+	int values[atoi(argv[1])];
 	int totalvalue = 0;
 	int count = 0;
 	srand(time(NULL));
-	//generating items
-	for(int index = 0; index < atoi(argv[1]); index++){
-		//generating copies
+	string result = "";
+	int valuecount = 0;
+	for( int counter = 0; counter < atoi(argv[1])*atoi(argv[2]) && valuecount < atoi(argv[1])*atoi(argv[2]); counter++ ){
+		int weight = rand() % 100 + 1;
+		srand(time(NULL)+count+rand());
+		int copies = rand() % atoi(argv[2]) + 1;
+		if(valuecount + copies > atoi(argv[1])*atoi(argv[2])){
+			copies = atoi(argv[1])*atoi(argv[2]) - valuecount;
+		}
+		valuecount += copies;
 		srand(time(NULL)+count+totalvalue+rand());
-  		int value = rand() % 100 + 1;
-
-		for(int inner = 0; inner < atoi(argv[2]); inner++){
-  			totalvalue += value;
-  			values[count++] = value;
-  		}
-	}
-	count = 0;
-	string result = to_string(totalvalue/2) + "\n";
-	for( int counter = 0; counter < atoi(argv[1]); counter++ ){
-		for( int inner = 0; inner < atoi(argv[2]); inner++){
-			srand(time(NULL)+count+rand());
-			result.append(to_string(counter) + "," + to_string(values[count++]) + "," + to_string(rand() % 100 + 1) + "\n");
-			
+		int value = rand() % 100 + 1;
+		totalvalue += value * copies;
+		if(counter < atoi(argv[1])*atoi(argv[2]) && valuecount < atoi(argv[1])*atoi(argv[2])){
+			result.append(to_string(copies) + "," + to_string(value) + "," + to_string(weight) + "\n");
+		}else{
+			result.append(to_string(copies) + "," + to_string(value) + "," + to_string(weight));
 		}
 	}
+	result = to_string(atoi(argv[1])*atoi(argv[2])) + "\n" + to_string(totalvalue/2) + "\n" + result;
 	int size = write(filefd, result.c_str(), result.length());
 	if(size < 0){
 		perror("Couldn't write to file.");

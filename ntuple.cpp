@@ -8,10 +8,11 @@
 
 using namespace std;
 
-bool DEBUG_ON = true;
+bool DEBUG_ON = false;
 
 void addOneMixedRadix(vector<int>&, vector<int>);
 void print(vector<int>);
+void print(vector<int>, vector<int>, vector<int>);
 bool overflowCheck(vector<int>);
 int sum(vector<int>, vector<int>);
 
@@ -37,7 +38,7 @@ int main(int arg, char *argv[]){
 		cout<<". . .\n";
 		fin.open(argv[1]);
 		if(!fin.good()){
-			cout<<"File I/O Error. Terminating.\n";
+			if(DEBUG_ON) cout<<"File I/O Error. Terminating.\n";
 			return 0;
 		}
 		getline(fin, line); //we dgaf
@@ -55,8 +56,6 @@ int main(int arg, char *argv[]){
 			A.push_back(0);
 		}
 	} //Checks if # of args is 2, so that we can open the file that is the 2nd arg
-	else 
-		DEBUG_ON = true;
 
 	if(DEBUG_ON) print(A);
 	if(DEBUG_ON) print(B);
@@ -82,10 +81,8 @@ int main(int arg, char *argv[]){
 			
 		if(DEBUG_ON) if(numOfPermutations %  4 == 0) print(A);
 	}while(!overflowCheck(A)); //NOTE: We can also enumerate them out using pow function summation, this is just simpler for now.
-	cout<<"Best Permutation's Items = ";
-	print(bestPerm);
-	cout<<"Corresponding Weight = "<<bestWeightSoFar<<endl;
-	cout<<"Corresponding Value = "<<bestValueSoFar<<endl;
+	print(bestPerm, weight, value);
+	cout<<bestValueSoFar<<","<<bestWeightSoFar;
 	return 0;
 }
 
@@ -117,6 +114,15 @@ void print(vector<int> printMe){
 		cout<<"[ "<<printMe[i]<<" ] ";
 	cout<<endl;
 	return;
+}
+
+void print(vector<int> A, vector<int> weights, vector<int> values){
+	for(int i = 0; i < A.size(); i++){
+		if(A[i] == 0) continue;
+		for(int j = 0; j < A[i]; j++){
+			cout<<i<<","<<values[i]<<","<<weights[i]<<endl;
+		}
+	}
 }
 
 bool overflowCheck(vector<int> checkMe){
