@@ -8,12 +8,12 @@
 
 using namespace std;
 
-bool DEBUG_ON = false;
+bool DEBUG_ON = true;
 
 void addOneMixedRadix(vector<int>&, vector<int>);
 void print(vector<int>);
 void print(vector<int>, vector<int>, vector<int>);
-bool overflowCheck(vector<int>);
+bool overflowCheck(vector<int>); //legacy
 int sum(vector<int>, vector<int>);
 
 int main(int arg, char *argv[]){
@@ -30,39 +30,31 @@ int main(int arg, char *argv[]){
 	int bestValueSoFar = 0;
 	int bestWeightSoFar = 0;
 	vector<int> bestPerm;
-	
-	if(arg == 2){
-		if(DEBUG_ON) cout<<"Attempting to open ";
-		if(DEBUG_ON) for(int i = 0; i < strlen(argv[1]); i++)
-			cout<<argv[1][i];
-		if(DEBUG_ON) cout<<". . .\n";
-		fin.open(argv[1]);
-		if(!fin.good()){
-			if(DEBUG_ON) cout<<"File I/O Error. Terminating.\n";
-			return 0;
-		}
-		getline(fin, line); //we dgaf
-		getline(fin, line); //this will have max Weight
-		maxWeight = stoi(line);
-		while(fin.good()){
-			getline(fin, line); 
-			strcpy(buf, line.c_str());
-			const string itemCopies(token = strtok(buf, comma));
-			const string itemValue(token = strtok(0, comma)); 
-			const string itemWeight(token = strtok(0, comma));
-			value.push_back(stoi(itemValue));
-			weight.push_back(stoi(itemWeight));
-			B.push_back(stoi(itemCopies) + 1);
-			A.push_back(0);
-		}
-	} //Checks if # of args is 2, so that we can open the file that is the 2nd arg
-
-	if(DEBUG_ON) print(A);
-	if(DEBUG_ON) print(B);
-	if(DEBUG_ON) print(value);
-	if(DEBUG_ON) print(weight);
-	if(DEBUG_ON) cout<<"---------------Beginning Enumeration of Permutations---------------"<<endl;
+	fin.open("tester.txt");
+	if(!fin.good()){
+		if(DEBUG_ON) cout<<"File I/O Error. Terminating.\n";
+		return 0;
+	}
+	getline(fin, line); //we dgaf
+	getline(fin, line); //this will have max Weight
+	maxWeight = stoi(line);
+	while(fin.good()){
+		getline(fin, line); 
+		strcpy(buf, line.c_str());
+		const string itemCopies(token = strtok(buf, comma));
+		const string itemValue(token = strtok(0, comma)); 
+		const string itemWeight(token = strtok(0, comma));
+		value.push_back(stoi(itemValue));
+		weight.push_back(stoi(itemWeight));
+		B.push_back(stoi(itemCopies) + 1);
+		A.push_back(0);
+	}
+	 //Checks if # of args is 2, so that we can open the file that is the 2nd arg
 	int numOfPermutations = 0;
+	int totalIterations = 1;
+	for(int i = 0; i < B.size(); i++){
+		totalIterations *= B[i];
+	}
 	do{
 		addOneMixedRadix(A, B);
 		numOfPermutations++;
@@ -78,9 +70,7 @@ int main(int arg, char *argv[]){
 				bestPerm = A;
 			}
 		}
-			
-		if(DEBUG_ON) if(numOfPermutations %  4 == 0) print(A);
-	}while(!overflowCheck(A)); //NOTE: We can also enumerate them out using pow function summation, this is just simpler for now.
+	}while(numOfPermutations < totalIterations); //NOTE: We can also enumerate them out using pow function summation, this is just simpler for now.
 	print(bestPerm, weight, value);
 	cout<<bestValueSoFar<<","<<bestWeightSoFar;
 	return 0;
@@ -125,7 +115,7 @@ void print(vector<int> A, vector<int> weights, vector<int> values){
 	}
 }
 
-bool overflowCheck(vector<int> checkMe){
+bool overflowCheck(vector<int> checkMe){ //legacy
 	for(int i = 0; i < checkMe.size(); i++){
 		if(checkMe[i] !=0)
 			return false;
