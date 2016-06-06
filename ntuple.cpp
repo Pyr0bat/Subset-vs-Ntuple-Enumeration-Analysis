@@ -10,11 +10,11 @@ using namespace std;
 
 bool DEBUG_ON = true;
 
-void addOneMixedRadix(vector<int>&, vector<int>);
+void addOneMixedRadix(vector<int>&, vector<int>&);
 void print(vector<int>);
 void print(vector<int>, vector<int>, vector<int>);
 bool overflowCheck(vector<int>); //legacy
-int sum(vector<int>, vector<int>);
+int sum(vector<int>&, vector<int>&);
 
 int main(int arg, char *argv[]){
 	vector<int> A;
@@ -82,7 +82,7 @@ TODO (Potentially): Pass as parameters the specifics of each enumeration,
 	ex:	if only 500 gold bars are to be given in total, then check to make
 		sure that the permutation uses exactly 500 gold bars	
 */
-void addOneMixedRadix(vector<int>& a, vector<int> b){ 
+void addOneMixedRadix(vector<int>& a, vector<int>& b){ 
 	if(a.size() != b.size()){
 		cout<<"ERROR: Arrays of different size!\n";
 		return;
@@ -125,7 +125,7 @@ bool overflowCheck(vector<int> checkMe){ //legacy
 	return true; 
 }
 
-int sum(vector<int> permVec, vector<int> numVec){
+int sum(vector<int>& permVec, vector<int>& numVec){
 	int sum = 0;
 	for(int i = 0; i < permVec.size(); i++)
 		sum += permVec[i]*numVec[i];
