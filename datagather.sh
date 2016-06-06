@@ -4,10 +4,10 @@ g++ subset.cpp -o subset -std=c++11
 g++ datagenerator.cpp -o datagenerator -std=c++11
 g++ ntuple.cpp -o ntuple -std=c++11
 
-for j in `seq 3 50`; do
-    for k in `seq 1 50`; do
-        for i in `seq 1 1`; do 
-            ./datagenerator j k
+for j in `seq 3 5`; do
+    for k in `seq 1 4`; do
+        for i in `seq 1 50`; do 
+            ./datagenerator $j $k
 	    	(time ./ntuple) 2> ntupleResult.txt	
 			while read -r line
 			do

@@ -20,7 +20,7 @@ int main(int argc, char *argv[]){
 		printf("datagenerator [number of items] [number of copies]");
 		exit(1);
 	}
-	int filefd = open("tester.txt", O_RDWR | O_CREAT | O_TRUNC);
+	int filefd = open("tester.txt", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 	if(filefd < 0){
 		perror("Couldn't create file.");
 	}

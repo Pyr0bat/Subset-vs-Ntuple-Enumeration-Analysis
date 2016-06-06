@@ -34,3 +34,6 @@ then
 else
     echo "All tests passed."
 fi
+rm datagenerator
+rm ntuple
+rm subset

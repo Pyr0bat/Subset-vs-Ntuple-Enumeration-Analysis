@@ -21,7 +21,6 @@ int *knapsack (item *items, const int numitems, int bagsize) {
     for(int index = 0; index < numitems+1; index++){
         arrays[index] = new int[numitems+1];
     }
-
     //find optimal bag
     arrays[0] = array;
     for (int index = 1; index <= numitems; index++) {
@@ -38,7 +37,8 @@ int *knapsack (item *items, const int numitems, int bagsize) {
     }
     //store optimal bag in result to return
     int *result = new int[numitems];
-    for (int index = numitems, inner = bagsize; index > 0; index--) {
+    int inner = bagsize;
+    for (int index = numitems; index > 0; index--) {
         if (arrays[index][inner] > arrays[index - 1][inner]) {
             result[index - 1] = 1;
             inner -= items[index - 1].weight;
@@ -70,23 +70,27 @@ int main(){
         int value = atoi(strtok(NULL, ","));
         int weight = atoi(strtok(NULL, ","));
         for(int index = 0; index < copies;index++){
-        	items[counter].type = count;
-        	items[counter].weight = weight;
-        	items[counter++].value = value;
+            items[counter].type = count;
+            items[counter].weight = weight;
+            items[counter++].value = value;
         }
         count++;
     }
     fclose(filefd);
     result = knapsack(items, sizeof (items) / sizeof (item), totalweight);
     int totalvalue = 0;
-    totalweight = 0;
+    int totalw = 0;
+    
     for(int index = 0; index < sizeof (items) / sizeof (item); index++){
         if(result[index]){
-            printf("%d,%d,%d\n", items[index].type, items[index].value,items[index].weight);
-            totalweight += items[index].weight;
+            if(totalweight < items[index].weight){
+                continue;
+            }
+            printf("%d,%d,%d\n", items[index].type, items[index].value, items[index].weight);
+            totalw += items[index].weight;
             totalvalue += items[index].value;
         }
     }
-    printf("%d,%d", totalvalue, totalweight);
+    printf("%d,%d", totalvalue, totalw);
     return 0;
 }
