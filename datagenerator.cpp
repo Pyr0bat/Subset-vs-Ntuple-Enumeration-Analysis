@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
 		srand(time(NULL)+count+totalvalue+rand());
 		int value = rand() % 100 + 1;
 		totalvalue += value * copies;
-		if(counter < atoi(argv[1]) && valuecount < atoi(argv[1])*atoi(argv[2])){
+		if(counter < atoi(argv[1]) - 1 && valuecount < atoi(argv[1])*atoi(argv[2])){
 			result.append(to_string(copies) + "," + to_string(value) + "," + to_string(weight) + "\n");
 		}else{
 			result.append(to_string(copies) + "," + to_string(value) + "," + to_string(weight));
