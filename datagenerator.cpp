@@ -20,7 +20,7 @@ int main(int argc, char *argv[]){
 		printf("datagenerator [number of items] [number of copies]");
 		exit(1);
 	}
-	int filefd = open("tester.txt", O_WRONLY | O_CREAT | O_TRUNC);
+	int filefd = open("tester.txt", O_RDWR | O_CREAT | O_TRUNC);
 	if(filefd < 0){
 		perror("Couldn't create file.");
 	}
@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
 	srand(time(NULL));
 	string result = "";
 	int valuecount = 0;
-	for( int counter = 0; counter < atoi(argv[1])*atoi(argv[2]) && valuecount < atoi(argv[1])*atoi(argv[2]); counter++ ){
+	for( int counter = 0; counter < atoi(argv[1]) && valuecount < atoi(argv[1])*atoi(argv[2]); counter++ ){
 		int weight = rand() % 100 + 1;
 		srand(time(NULL)+count+rand());
 		int copies = rand() % atoi(argv[2]) + 1;
@@ -41,13 +41,13 @@ int main(int argc, char *argv[]){
 		srand(time(NULL)+count+totalvalue+rand());
 		int value = rand() % 100 + 1;
 		totalvalue += value * copies;
-		if(counter < atoi(argv[1])*atoi(argv[2]) && valuecount < atoi(argv[1])*atoi(argv[2])){
+		if(counter < atoi(argv[1]) && valuecount < atoi(argv[1])*atoi(argv[2])){
 			result.append(to_string(copies) + "," + to_string(value) + "," + to_string(weight) + "\n");
 		}else{
 			result.append(to_string(copies) + "," + to_string(value) + "," + to_string(weight));
 		}
 	}
-	result = to_string(atoi(argv[1])*atoi(argv[2])) + "\n" + to_string(totalvalue/2) + "\n" + result;
+	result = to_string(valuecount) + "\n" + to_string(totalvalue/2) + "\n" + result;
 	int size = write(filefd, result.c_str(), result.length());
 	if(size < 0){
 		perror("Couldn't write to file.");
