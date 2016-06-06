@@ -71,8 +71,8 @@ int main(int arg, char *argv[]){
 			}
 		}
 	}while(numOfPermutations < totalIterations); //NOTE: We can also enumerate them out using pow function summation, this is just simpler for now.
-	//print(bestPerm, weight, value);
-	//cout<<bestValueSoFar<<","<<bestWeightSoFar;
+	print(bestPerm, weight, value);
+	cout<<bestValueSoFar<<","<<bestWeightSoFar;
 	return 0;
 }
 
